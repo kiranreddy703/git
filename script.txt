@@ -1,0 +1,13 @@
+#!/bin/bash
+for i in 'cat server_list'
+do
+echo "server name $i"
+ssh -tt $i sudo su - <<"SSH_EOF"
+cd /usr/openv/netbackup/bin/admincmd
+output=$(bperror -U -backstat -by_statcode -hoursago 24)
+echo "$output" >> //tmp/error.txt
+exit
+SSH_EOF
+done
+
+mailx -s "Result of /kiran/home.sh" mailid@ril.com,mailidril.com < error.txt
